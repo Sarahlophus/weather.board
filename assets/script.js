@@ -1,16 +1,25 @@
 // variables
 let apiKey = "2b46a1544dbd4dd28d0b708131e2ad41";
+const searchedCities = [];
+
 // functions
 // retrieve city name from lat/lon info
 function handleCoords(searchCity) {
   const fetchUrl = `http://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
-
+  // if successful, provied response. If error, show in console
   fetch(fetchUrl)
     .then(function (response) {
-      return response.json();
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("There was a problem with the response");
+      }
     })
     .then(function (data) {
       handleCurrentWeather(data.coord, data.name);
+    })
+    .catch((error) => {
+      console.log(error);
     });
 }
 
@@ -56,22 +65,35 @@ function displayFiveDayForecast(fiveDayData) {
 }
 
 function handleSearchSubmit(event) {
-  const cityName = document.getElementById("searchInput").value.trim();
-  document.getElementById("searchHistory").innerHTML += `<button class="js-searchHistory" data-city=${cityName}>${cityName}</button>`;
+  // start function blank
+  document.getElementById("searchHistory").innerHTML = "";
   event.preventDefault();
+  // Grab city name from user input in search field
+  const cityName = document.getElementById("searchInput").value.trim();
+  // convert all city searches to lower case format
+  searchedCities.push(cityName.toLowerCase());
+  // filter prev searched cities to eliminate repeats
+  const filteredSearchedCities = searchedCities.filter((city, index) => {
+    return searchedCities.indexOf(city) === index;
+  });
+  // generates button for each previously searched city name
+  filteredSearchedCities.forEach((city) => {
+    document.getElementById("searchHistory").innerHTML += `<button class="js-searchHistory" data-city=${city}>${city}</button>`;
+  });
+
   handleCoords(cityName);
 }
 
+// generates previously searched city name
 function handleSearchHistory(event) {
   event.preventDefault();
   const cityName = this.getAttribute("data-city");
   handleCoords(cityName);
 }
 
-// listeners
+// listeners and calls
 // search for city
 document.getElementById("searchForm").addEventListener("submit", handleSearchSubmit);
 // on page load, show any past cities searched
 document.querySelector("#searchHistory").addEventListener("click", handleSearchHistory);
-// click on city to show weather
-// call functions
+// click on previous searched city to show weather
