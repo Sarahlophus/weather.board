@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Friend</title>
+
+    <!-- moment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <!-- header -->
+        <h1>Weather Friend</h1>
+        <p>Search for a city to find today's weather, and a 5-day forecast</p>
+    </header>
+
+
+    <aside>
+        <!-- search for city -->
+        <form id="searchForm">
+            <input id="searchInput" type="text" placeholder="type city name">
+            <button type="submit">Go!</button>
+        </form>
+        <!-- input field -->
+        <!-- 'go' button -->
+        <!-- show last 8 cities searched -->
+        <div id="searchHistory">
+            <button class="js-history" data-city="dallas">Dallas</button>
+        </div>
+    </aside>
+    <main>
+        <!-- current day weather card -->
+        <div id="currentWeather"></div>
+        <!-- 5 day weather forecast with icons -->
+        <h3>5-Day Forecast</h3>
+        <div id="fiveDayForecast"></div>
+
+    </main>
+
+    <script src="./assets/script.js"></script>
+</body>
+
+</html>
