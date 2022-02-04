@@ -7,40 +7,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Friend</title>
 
-    <!-- moment -->
+    <!-- bulma (styling)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- moment (date formatter)-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
 </head>
 
 <body>
-
-    <header>
-        <!-- header -->
-        <h1>Weather Friend</h1>
-        <p>Search for a city to find today's weather, and a 5-day forecast</p>
+    <!-- header -->
+    <header class="hero is-small has-text-centered is-info">
+        <div class="hero-body">
+            <h1 class="title">Weather Friend</h1>
+            <p class="subtitle">Search for a city to find today's weather, and a 5-day forecast</p>
+        </div>
     </header>
 
+    <div class="columns">
+        <aside class="column is-one-quarter section">
+            <!-- search for city -->
+            <h3 class="has-text-weight-bold">Search for a city:</h3>
+            <form id="searchForm" class="field has-addons">
+                <!-- input field -->
+                <input id="searchInput" class="input" type="text" placeholder="type city name">
+                <!-- 'go' button -->
+                <button class="button is-info" type="submit">Go!</button>
+            </form>
 
-    <aside>
-        <!-- search for city -->
-        <form id="searchForm">
-            <input id="searchInput" type="text" placeholder="type city name">
-            <button type="submit">Go!</button>
-        </form>
-        <!-- input field -->
-        <!-- 'go' button -->
-        <!-- show last 8 cities searched -->
-        <div id="searchHistory">
-            <button class="js-history" data-city="dallas">Dallas</button>
-        </div>
-    </aside>
-    <main>
-        <!-- current day weather card -->
-        <div id="currentWeather"></div>
-        <!-- 5 day weather forecast with icons -->
-        <h3>5-Day Forecast</h3>
-        <div id="fiveDayForecast"></div>
+            <!-- show last 8 cities searched -->
+            <div id="searchHistory" class="is-ancestor is-vertical tile">
+                <!-- <button class="js-history" data-city=""></button> -->
+            </div>
+        </aside>
 
-    </main>
+        <main class="column section">
+            <!-- current day weather card -->
+            <div id="currentWeather"></div>
+
+            <!-- 5 day weather forecast with icons -->
+            <div class="mt-4">
+                <h3 id="fiveDayTitle" class="has-text-weight-bold is-hidden is-size-5">5-Day Forecast:</h3>
+                <div id="fiveDayForecast" class="columns">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer has-text-centered p-4">
+        <p class="is-size-6">made with ❤️ by Sarah Williams</p>
+    </footer>
 
     <script src="./assets/script.js"></script>
 </body>

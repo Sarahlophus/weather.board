@@ -1,6 +1,7 @@
 // variables
 let apiKey = "2b46a1544dbd4dd28d0b708131e2ad41";
-const searchedCities = [];
+// get local storage and put it in a variable as an array || []
+const searchedCities = JSON.parse(localStorage.getItem("cityHistory")) || [];
 
 // functions
 // retrieve city name from lat/lon info
@@ -44,54 +45,116 @@ function handleCurrentWeather(coordinates, city) {
 function displayCurrentWeather(currentCityData, cityName) {
   // retrieve weather icon
   let weatherIcon = `http://openweathermap.org/img/wn/${currentCityData.weather[0].icon}.png`;
-  // TODO: add humidity, wind, UV Index info
-  // TODO: create dynamic background for UV index by adding class based on value (low = green background, high = orange background)
-  // display searched city name, date, weather icon, temp
-  document.getElementById("currentWeather").innerHTML = `<h2>${cityName} ${moment.unix(currentCityData.dt).format("dddd MMM Do, YYYY")} <img src="${weatherIcon}"></h2> <div>Temp: ${
+
+  // display searched city name, date, weather icon, temp via innerHTML
+  document.getElementById("currentWeather").innerHTML = `<div class="box is-size-4"><h2 class="has-text-weight-bold">Today in ${cityName} (${moment
+    .unix(currentCityData.dt)
+    .format("dddd MMM Do, YYYY")})</h2><div><img src="${weatherIcon}"><p>Forecast: ${currentCityData.weather[0].description}</p><div><div>Temperature: ${Math.round(
     currentCityData.temp
-  }&deg F</div>`;
+  )}&deg F</div><div>Humidity: ${currentCityData.humidity}%</div><div>Wind Speed: ${currentCityData.wind_speed} mph</div><div>UV Index: <span id="uvi" class="is-size-4">${
+    currentCityData.uvi
+  }</span></div></div>`;
+
+  // dynamic UVI background, shows mint if low, orange if high
+  let uviCurrent = currentCityData.uvi;
+  //
+  if (uviCurrent <= 3) {
+    document.getElementById("uvi").classList.add("has-background-success", "p-4", "tag");
+  } else if (uviCurrent <= 7 && uviCurrent >= 4) {
+    document.getElementById("uvi").classList.add("has-background-warning", "p-4", "tag");
+  } else {
+    document.getElementById("uvi").classList.add("has-background-danger", "p-4", "tag");
+  }
 }
 
+// generates and displays searched city's 5-day forecast
 function displayFiveDayForecast(fiveDayData) {
+  // slice 8 day info to include only next 5 days
   const cityData = fiveDayData.slice(1, 6);
+  // starts function as blank to prevent results buildup
   document.getElementById("fiveDayForecast").innerHTML = "";
   // loop through next 8 days
   cityData.forEach((day) => {
+    // fetch weather icons for consecutive days
     let weatherIcon = `http://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
-    // TODO: add temp, wind, humidity - don't forget unit symbols (deg, %, etc)
-    // display date, weather icon,
-    document.getElementById("fiveDayForecast").innerHTML += `<div><div>${moment.unix(day.dt).format("dddd MMM Do")}</div><div><img src="${weatherIcon}"></div></div>`;
+    // display date, weather icon, temp, wind, humidity for five day forecast
+    document.getElementById("fiveDayForecast").innerHTML += `<div class="box column has-background-info-dark has-text-white is-2 m-4"><div class="has-text-weight-bold has-text-centered">${moment
+      .unix(day.dt)
+      .format("dddd MMM Do")}</div><div class="has-text-centered"><img src="${weatherIcon}"></div><div class="pb-3">Forecast: ${
+      day.weather[0].description
+    }</div><div class="pb-3">Temperature: ${Math.round(day.temp.max)}&deg</div><div class="pb-3">Wind: ${day.wind_speed}mph</div><div>Humidity: ${day.humidity}%</div></div>`;
   });
+  // remove hidden class from "5 Day Forecast" title
+  document.getElementById("fiveDayTitle").classList.remove("is-hidden");
 }
 
+// functionality for city search bar
 function handleSearchSubmit(event) {
   // start function blank
   document.getElementById("searchHistory").innerHTML = "";
   event.preventDefault();
   // Grab city name from user input in search field
   const cityName = document.getElementById("searchInput").value.trim();
+
+  // for local storage
+
+  // check to see if the current city exists in that array
+  // if not push that city into the array
+  // render buttons from the array
+
   // convert all city searches to lower case format
   searchedCities.push(cityName.toLowerCase());
   // filter prev searched cities to eliminate repeats
+  if (!searchedCities.includes(cityName)) {
+    // push it into the array
+  }
+
   const filteredSearchedCities = searchedCities.filter((city, index) => {
     return searchedCities.indexOf(city) === index;
   });
-  // generates button for each previously searched city name
-  filteredSearchedCities.forEach((city) => {
-    document.getElementById("searchHistory").innerHTML += `<button class="js-searchHistory" data-city=${city}>${city}</button>`;
-  });
+  // save searchedCities array back to local storage
+  localStorage.setItem("cityHistory", JSON.stringify(filteredSearchedCities));
 
+  // This is what a filter() method does:
+  // const filteredSearchedCities = searchFilter(searchedCities);
+  // const searchFilter = (searchedCities) => {
+  //   const filteredCities = [];
+  //   for (let i = 0; i < searchedCities.length; i++) {
+  //     if (searchedCities[i] != cityName) {
+  //       filteredCities.push(cityName);
+  //     }
+  //   }
+  //   return filteredCities;
+  // };
+
+  // calls function to show search history buttons
+  showSearchButtons(filteredSearchedCities);
+  // calls function to retrieve city name from lat/lon info
   handleCoords(cityName);
+}
+
+function showSearchButtons(cities) {
+  // generates button for each previously searched city name
+  cities.forEach((city) => {
+    document.getElementById(
+      "searchHistory"
+    ).innerHTML += `<button class="button has-text-weight-semibold is-link is-light is-parent is-uppercase m-3 tile js-searchHistory" data-city=${city}>${city}</button>`;
+  });
+  // re-call api but with query parameter user inputs for history button links
 }
 
 // generates previously searched city name
 function handleSearchHistory(event) {
   event.preventDefault();
+  // retrieve city name from search input
   const cityName = this.getAttribute("data-city");
+  // calls function to retrieve city name from lat/lon info
   handleCoords(cityName);
 }
 
 // listeners and calls
+// show local storage buttons
+showSearchButtons(searchedCities);
 // search for city
 document.getElementById("searchForm").addEventListener("submit", handleSearchSubmit);
 // on page load, show any past cities searched
