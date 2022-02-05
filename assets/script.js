@@ -35,7 +35,6 @@ function handleCurrentWeather(coordinates, city) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
       displayCurrentWeather(data.current, city);
       displayFiveDayForecast(data.daily);
     });
@@ -119,7 +118,6 @@ function showSearchButtons(cities) {
   // generates button for each previously searched city name
   // onclick, button calls handleCoords function, plugging in prev searched city name for api call
   cities.forEach((city) => {
-    console.log("city", city);
     document.getElementById(
       "searchHistory"
     ).innerHTML += `<button class="button has-text-weight-semibold is-link is-light is-child is-uppercase m-3 tile js-searchHistoryBtn" onclick="handleCoords('${city}')" data-city=${city}>${city}</button>`;
@@ -147,5 +145,5 @@ function clearSearchHistory() {
 showSearchButtons(searchedCities);
 // search for city
 document.getElementById("searchForm").addEventListener("submit", handleSearchSubmit);
-// // click button to clear search history
+// click button to clear search history
 document.getElementById("clearSearchBtn").addEventListener("click", clearSearchHistory);
