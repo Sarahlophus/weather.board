@@ -6,7 +6,7 @@ const searchedCities = JSON.parse(localStorage.getItem("cityHistory")) || [];
 // functions
 // retrieve city name from lat/lon info
 function handleCoords(searchCity) {
-  const fetchUrl = `http://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
+  const fetchUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
   // if successful, provied response. If error, show in console
   fetch(fetchUrl)
     .then(function (response) {
@@ -55,12 +55,12 @@ function displayCurrentWeather(currentCityData, cityName) {
     currentCityData.uvi
   }</span></div></div>`;
 
-  // dynamic UVI background, shows mint if low, orange if high
+  // dynamic UVI background: shows green if low, yellow if middling, red if high
   let uviCurrent = currentCityData.uvi;
   //
-  if (uviCurrent <= 3) {
+  if (uviCurrent <= 3.99) {
     document.getElementById("uvi").classList.add("has-background-success", "p-4", "tag");
-  } else if (uviCurrent <= 7 && uviCurrent >= 4) {
+  } else if (uviCurrent <= 7.99 && uviCurrent >= 4) {
     document.getElementById("uvi").classList.add("has-background-warning", "p-4", "tag");
   } else {
     document.getElementById("uvi").classList.add("has-background-danger", "p-4", "tag");
@@ -96,36 +96,18 @@ function handleSearchSubmit(event) {
   // Grab city name from user input in search field
   const cityName = document.getElementById("searchInput").value.trim();
 
-  // for local storage
-
-  // check to see if the current city exists in that array
-  // if not push that city into the array
-  // render buttons from the array
-
   // convert all city searches to lower case format
   searchedCities.push(cityName.toLowerCase());
   // filter prev searched cities to eliminate repeats
   if (!searchedCities.includes(cityName)) {
     // push it into the array
   }
-
+  // filter cities to exclude repeat searches
   const filteredSearchedCities = searchedCities.filter((city, index) => {
     return searchedCities.indexOf(city) === index;
   });
   // save searchedCities array back to local storage
   localStorage.setItem("cityHistory", JSON.stringify(filteredSearchedCities));
-
-  // This is what a filter() method does:
-  // const filteredSearchedCities = searchFilter(searchedCities);
-  // const searchFilter = (searchedCities) => {
-  //   const filteredCities = [];
-  //   for (let i = 0; i < searchedCities.length; i++) {
-  //     if (searchedCities[i] != cityName) {
-  //       filteredCities.push(cityName);
-  //     }
-  //   }
-  //   return filteredCities;
-  // };
 
   // calls function to show search history buttons
   showSearchButtons(filteredSearchedCities);
@@ -135,12 +117,13 @@ function handleSearchSubmit(event) {
 
 function showSearchButtons(cities) {
   // generates button for each previously searched city name
+  // onclick, button calls handleCoords function, plugging in prev searched city name for api call
   cities.forEach((city) => {
+    console.log("city", city);
     document.getElementById(
       "searchHistory"
-    ).innerHTML += `<button class="button has-text-weight-semibold is-link is-light is-parent is-uppercase m-3 tile js-searchHistory" data-city=${city}>${city}</button>`;
+    ).innerHTML += `<button class="button has-text-weight-semibold is-link is-light is-parent is-uppercase m-3 tile js-searchHistoryBtn" onclick="handleCoords('${city}')" data-city=${city}>${city}</button>`;
   });
-  // re-call api but with query parameter user inputs for history button links
 }
 
 // generates previously searched city name
@@ -152,11 +135,18 @@ function handleSearchHistory(event) {
   handleCoords(cityName);
 }
 
+function clearSearchHistory() {
+  localStorage.clear();
+  document.querySelector(".js-searchHistoryBtn").remove();
+  document.getElementById("searchHistory") = "";
+}
+
 // listeners and calls
 // show local storage buttons
 showSearchButtons(searchedCities);
 // search for city
 document.getElementById("searchForm").addEventListener("submit", handleSearchSubmit);
-// on page load, show any past cities searched
-document.querySelector("#searchHistory").addEventListener("click", handleSearchHistory);
+// // click button to clear search history
+document.getElementById("clearSearchBtn").addEventListener("click", clearSearchHistory);
+
 // click on previous searched city to show weather
