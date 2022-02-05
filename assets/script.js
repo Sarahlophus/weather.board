@@ -44,7 +44,7 @@ function handleCurrentWeather(coordinates, city) {
 // generate searched city name, date, and weather icon
 function displayCurrentWeather(currentCityData, cityName) {
   // retrieve weather icon
-  let weatherIcon = `http://openweathermap.org/img/wn/${currentCityData.weather[0].icon}.png`;
+  let weatherIcon = `https://openweathermap.org/img/wn/${currentCityData.weather[0].icon}.png`;
 
   // display searched city name, date, weather icon, temp via innerHTML
   document.getElementById("currentWeather").innerHTML = `<div class="box is-size-4"><h2 class="has-text-weight-bold">Today in ${cityName} (${moment
@@ -76,7 +76,7 @@ function displayFiveDayForecast(fiveDayData) {
   // loop through next 8 days
   cityData.forEach((day) => {
     // fetch weather icons for consecutive days
-    let weatherIcon = `http://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+    let weatherIcon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
     // display date, weather icon, temp, wind, humidity for five day forecast
     document.getElementById("fiveDayForecast").innerHTML += `<div class="box column has-background-info-dark has-text-white is-2 m-4"><div class="has-text-weight-bold has-text-centered">${moment
       .unix(day.dt)
