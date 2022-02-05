@@ -1,7 +1,7 @@
 // variables
 let apiKey = "2b46a1544dbd4dd28d0b708131e2ad41";
 // get local storage and put it in a variable as an array || []
-const searchedCities = JSON.parse(localStorage.getItem("cityHistory")) || [];
+let searchedCities = JSON.parse(localStorage.getItem("cityHistory")) || [];
 
 // functions
 // retrieve city name from lat/lon info
@@ -122,7 +122,7 @@ function showSearchButtons(cities) {
     console.log("city", city);
     document.getElementById(
       "searchHistory"
-    ).innerHTML += `<button class="button has-text-weight-semibold is-link is-light is-parent is-uppercase m-3 tile js-searchHistoryBtn" onclick="handleCoords('${city}')" data-city=${city}>${city}</button>`;
+    ).innerHTML += `<button class="button has-text-weight-semibold is-link is-light is-child is-uppercase m-3 tile js-searchHistoryBtn" onclick="handleCoords('${city}')" data-city=${city}>${city}</button>`;
   });
 }
 
@@ -135,10 +135,11 @@ function handleSearchHistory(event) {
   handleCoords(cityName);
 }
 
+// clear local storage and delete search history buttons
 function clearSearchHistory() {
   localStorage.clear();
-  document.querySelector(".js-searchHistoryBtn").remove();
-  document.getElementById("searchHistory") = "";
+  document.getElementById("searchHistory").innerHTML = "";
+  searchedCities = [];
 }
 
 // listeners and calls
@@ -148,5 +149,3 @@ showSearchButtons(searchedCities);
 document.getElementById("searchForm").addEventListener("submit", handleSearchSubmit);
 // // click button to clear search history
 document.getElementById("clearSearchBtn").addEventListener("click", clearSearchHistory);
-
-// click on previous searched city to show weather
