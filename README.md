@@ -14,6 +14,12 @@ If your search history gets too cluttered, click the 'Clear Searches' button to 
 
 ![weather dashboard demo](./assets/weatherFriend.gif)
 
+## Technologies and Resources Used
+
+- HTML
+- Bulma (styling)
+- JavaScript
+
 ## Links for repo and live page
 
 - Github Page: https://sarahlophus.github.io/weather.board/
