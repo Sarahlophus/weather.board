@@ -19,8 +19,9 @@ If your search history gets too cluttered, click the 'Clear Searches' button to 
 - HTML
 - Bulma (styling)
 - JavaScript
+- Moment (date formatter)
 
 ## Links for repo and live page
 
 - Github Page: https://sarahlophus.github.io/weather.board/
-- Giyhub Repo: https://github.com/Sarahlophus/weather.board
+- Github Repo: https://github.com/Sarahlophus/weather.board
